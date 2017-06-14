@@ -1,0 +1,421 @@
+
+{
+  "id": "org.scheffers.homey.sets",
+  "name": {
+    "en": "Sets",
+    "nl": "Verzamelingen"
+  },
+  "description": {
+    "en": "Sets",
+    "nl": "Verzamelingen"
+  },
+  "version": "0.0.1",
+  "compatibility": ">=1.2",
+  "author": {
+    "name": "Erik Scheffers",
+    "email": "erik@scheffers.org"
+  },
+  "category": "tools",
+  "flow": {
+    "triggers": [
+      {
+        "id": "not_none_active",
+        "title": {
+          "en": "Some states active",
+          "nl": "Sommige toestanden actief"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          }
+        ]
+      },
+      {
+        "id": "none_active",
+        "title": {
+          "en": "No states active",
+          "nl": "Geen toestanden actief"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          }
+        ]
+      },
+      {
+        "id": "none_active_changed",
+        "title": {
+          "en": "Change none/some states active",
+          "nl": "Wijziging geen/sommige toestanden actief"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          }
+        ]
+      },
+      {
+        "id": "all_active",
+        "title": {
+          "en": "All states active",
+          "nl": "Alle toestanden actief"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          }
+        ]
+      },
+      {
+        "id": "not_all_active",
+        "title": {
+          "en": "Not all states active",
+          "nl": "Niet alle toestanden actief"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          }
+        ]
+      },
+      {
+        "id": "all_active_changed",
+        "title": {
+          "en": "Change all/not all states active",
+          "nl": "Wijziging alle/niet alle toestanden actief"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          }
+        ]
+      },
+      {
+        "id": "state_set",
+        "title": {
+          "en": "State activated",
+          "nl": "Toestand ingeschakeld"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          },
+          {
+            "name": "state",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "State",
+              "nl": "Toestand"
+            }
+          },
+          {
+            "name": "trigger",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "changed",
+                "label": {
+                  "en": "When not in set",
+                  "nl": "Indien nog niet in verz."
+                }
+              },
+              {
+                "id": "always",
+                "label": {
+                  "en": "Always",
+                  "nl": "Altijd"
+                }
+              }
+            ],
+            "placeholder": {
+              "en": "Trigger",
+              "nl": "Trigger"
+            }
+          }
+        ]
+      },
+      {
+        "id": "state_reset",
+        "title": {
+          "en": "State deactivated",
+          "nl": "Toestand uitgeschakeld"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          },
+          {
+            "name": "state",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "State",
+              "nl": "Toestand"
+            }
+          },
+          {
+            "name": "trigger",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "changed",
+                "label": {
+                  "en": "When in set",
+                  "nl": "Indien in verzameling"
+                }
+              },
+              {
+                "id": "always",
+                "label": {
+                  "en": "Always",
+                  "nl": "Altijd"
+                }
+              }
+            ],
+            "placeholder": {
+              "en": "Trigger",
+              "nl": "Trigger"
+            }
+          }
+        ]
+      },
+      {
+        "id": "change",
+        "title": {
+          "en": "State change",
+          "nl": "Toestandswijziging"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "none_active",
+        "title": {
+          "en": "!{{No states active|States active}}",
+          "nl": "!{{Alle toestanden inactief|Niet alle toestanden inactief}}"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          }
+        ]
+      },
+      {
+        "id": "all_active",
+        "title": {
+          "en": "!{{All states active|Not all states active}}",
+          "nl": "!{{Alle toestanden actief|Niet alle toestanden actief}}"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          }
+        ]
+      },
+      {
+        "id": "is_active",
+        "title": {
+          "en": "!{{State active|State not active}}",
+          "nl": "!{{Toestand actief|Toestand niet actief}}"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          },
+          {
+            "name": "state",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "State",
+              "nl": "Toestand"
+            }
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "activate_state",
+        "title": {
+          "en": "Activate state",
+          "nl": "Activeer toestand"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          },
+          {
+            "name": "state",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "State",
+              "nl": "Toestand"
+            }
+          }
+        ]
+      },
+      {
+        "id": "activate_temp_state",
+        "title": {
+          "en": "Activate state temporarily",
+          "nl": "Activeer toestand tijdelijk"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          },
+          {
+            "name": "state",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "State",
+              "nl": "Toestand"
+            }
+          },
+          {
+            "name": "timeout",
+            "type": "number",
+            "min": 0,
+            "placeholder": {
+              "en": "Duration",
+              "nl": "Tijdsduur"
+            }
+          }
+        ]
+      },
+      {
+        "id": "deactivate_state",
+        "title": {
+          "en": "Deactivate state",
+          "nl": "Deactiveer toestand"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          },
+          {
+            "name": "state",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "State",
+              "nl": "Toestand"
+            }
+          }
+        ]
+      },
+      {
+        "id": "activate_all",
+        "title": {
+          "en": "Activate all states",
+          "nl": "Activeer alle toestanden"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          }
+        ]
+      },
+      {
+        "id": "deactivate_all",
+        "title": {
+          "en": "Deactivate all states",
+          "nl": "Deactiveer alle toestanden"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

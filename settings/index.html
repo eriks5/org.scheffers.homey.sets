@@ -1,0 +1,180 @@
+﻿<!doctype html>
+<html>
+<head>
+    <script type="text/javascript" src="/manager/webserver/assets/js/angular.js"></script>
+    <script type="text/javascript" src="setsCtrl.js"></script>
+    <style>
+        #sets {
+            clear: both;
+        }
+
+        .set {
+            list-style-type: none;
+            border-bottom: solid 1px #eee;
+            padding: 8px 0;
+
+            display: flex;
+            flex-direction: column;
+            flex-flow: row nowrap;
+        }
+
+        .set:last-child {
+            border-bottom: 0;
+        }
+
+        .set-add {
+            padding-left: 10px;
+        }
+
+        .set-add input[type=text]{
+            width: 226px;
+            margin-right: 10px;
+        }
+
+        .set-label {
+            padding: 0 10px;
+            width: 250px;
+            font-weight: 800;
+        }
+
+        .set-states {
+
+        }
+
+        .buttons {
+            position: absolute;
+            right: 10px;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .set:hover .buttons, .set.editing .buttons {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .states {
+            margin: 0;
+        }
+
+        .states li {
+            list-style-type: none;
+            padding-bottom: 2px;
+        }
+
+        .state {
+            cursor: pointer;
+
+            background-color: #ffffff;
+            color: black;
+
+            padding: 1px 3px;
+            border: solid 1px black;
+
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+
+        }
+
+        .state-active {
+            background-color: #719b01;
+            color: white;
+        }
+
+        .state-timed {
+            background-color: #347fc3;
+            color: white;
+        }
+
+        .state-timer {
+            padding-left: 1ex;
+            color: black;
+        }
+
+        .state-delete {
+            padding-left: 1ex;
+            cursor: pointer;
+        }
+
+        .pull-right {
+            float: right;
+        }
+
+        .sets-table tr {
+            border-bottom: solid 1px black;
+        }
+
+        .sets-table td {
+            vertical-align: top;
+        }
+    </style>
+</head>
+
+<body ng-app="setsApp" ng-controller="setsCtrl">
+    <div ng-if="!showAddSetForm" class="pull-right">
+        <button ng-click="doShowAddSetForm(true)">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i> Add set
+        </button>
+    </div>
+    <h2>Sets management</h2>
+    <ul id="sets">
+        <li ng-if="showAddSetForm" ng-init="newSet={}" class="set">
+            <form novalidate class="set-add">
+                <label for="addSetLabel">Add set</label>
+                <input type="text" id="addSetLabel" placeholder="Set name" ng-model="newSet.label" required>
+                <button ng-disable="!newSet.label" ng-click="createSet(newSet)">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Create set
+                </button>
+                <button ng-click="doShowAddSetForm(false)">
+                    <i class="fa fa-times" aria-hidden="true"></i> Cancel
+                </button>
+            </form>
+        </li>
+        <li ng-repeat="set in sets | orderBy:'label'" ng-init="nStates=getStates(set).length" ng-class="{set: true, editing: editSet===set.id}">
+            <div class="set-label">
+                {{ set.label }}
+            </div>
+            <div class="set-states">
+                <span ng-if="!nStates && editSet!==set.id">
+                    Add states to the set to use it.
+                </span>
+                <ul ng-if="nStates || editSet===set.id" class="states">
+                    <li ng-repeat="state in getStates(set) | orderBy:'label'">
+                        <span ng-click="toggleState(set.id, state.id)" class="state state-{{ state.type }}">{{ state.label }}</span>
+                        <span ng-if="state.timer" class="state-timer"><i class="fa fa-hourglass-o" aria-hidden="true"></i>{{ state.timer }}</span>
+                        <span ng-if="editSet===set.id" ng-click="deleteState(set.id, state.id)" class="state-delete"><i class="fa fa-trash-o"></i></span>
+                    </li>
+                    <li ng-if="editSet===set.id">
+                        <form novalidate>
+                            <input type="text" id="addStateLabel" placeholder="New state" ng-model="newState.label" required>
+                            <button ng-disable="!newState.label" ng-click="createState(set.id, newState)">
+                                <i class="fa fa-plus" aria-hidden="true"></i> new state
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <div class="buttons">
+                <button ng-if="editSet===set.id && !nStates" ng-click="deleteSet(set)">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Remove set
+                </button>
+                <button ng-if="editSet===set.id" ng-click="enableEditSet()">
+                    <i class="fa fa-fw fa-check-square-o" aria-hidden="true"></i> Edit set
+                </button>
+                <button ng-if="editSet!==set.id" ng-click="enableEditSet(set.id)">
+                    <i class="fa fa-fw fa-square-o" aria-hidden="true"></i> Edit set
+                </button>
+            </div>
+        </li>
+    </ul>
+
+    <script type="text/javascript">
+      function onHomeyReady() {
+        var sc = angular.element(document.body).scope();
+        sc.$emit("ready");
+        Homey.ready();
+      }
+    </script>
+</body>
+</html>
