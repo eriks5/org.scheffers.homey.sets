@@ -185,4 +185,5 @@ Considered true when the given state is not active in *set*
 
 ## Acknowledgements
 
-App icon made by [Freepik](http://www.freepik.com/) from [www.flaticon.com](http://www.flaticon.com/free-icon/is-an-element-of_262053) 
+App icon and store images made with icons by [Freepik](http://www.freepik.com/) 
+from [www.flaticon.com](http://www.flaticon.com/packs/math-symbols-4) 

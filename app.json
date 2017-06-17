@@ -9,11 +9,19 @@
     "en": "Sets",
     "nl": "Verzamelingen"
   },
+  "tags": {
+    "en": ["Set", "Sets", "State", "States", "Combine actions"],
+    "nl": ["Verzameling", "Verzamelingen", "Toestand", "Toestanden", "Combineer acties"]
+  },
   "version": "0.0.1",
   "compatibility": ">=1.2",
   "author": {
     "name": "Erik Scheffers",
     "email": "erik@scheffers.org"
+  },
+  "images": {
+    "large": "./assets/images/large.png",
+    "small": "./assets/images/small.png"
   },
   "category": "tools",
   "flow": {
