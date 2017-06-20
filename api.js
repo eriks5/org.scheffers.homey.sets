@@ -37,11 +37,10 @@ module.exports = [
     method: "POST",
     path: "/set/:set/state/",
     role: "owner",
-    fn: callbackResult(args => setManager.addState(
-        args.params.set,
-        setManager.getStateId(args.body.label, true)
-      )
-    )
+    fn: callbackResult(args => {
+      const stateId = setManager.getStateId(args.body.label, true);
+      return stateId && setManager.addState(args.params.set, stateId);
+    })
   },
   {
     description: "Delete state from set",
