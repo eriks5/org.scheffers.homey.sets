@@ -33,20 +33,26 @@ The following conditions are available:
  
 ## Changelog
 
-v0.0.2: Two crashes fixed
+v0.1.1: Auto-restore feature added: sets and states will be re-created using info in flows.
 
 v0.0.1: Initial release
 
 ## Settings
  
-The settings page allows you to create and remove sets, and add and remove states from these sets.
+The settings page allows you to create and remove sets, and add and remove states from these sets. Before removing
+states and sets, make sure no flows use them anymore, otherwise they will be recreated as soon as a flow uses them.
 
-It also shows the current state of the sets. States with a white background are not active, states 
+The settings also show the current state of the sets. States with a white background are not active, states 
 with a green background are active, while states with a blue background are active temporarily and will
 be deactivated when the timer listed after the state reaches 0.
 
-States can also be changed directly from the settings page, this is useful for debugging
-your flows. Clicking a state will toggle it between the active and inactive states.
+States can also be changed directly from the settings page, this is useful for debugging flows. 
+Clicking a state will toggle it between the active and inactive states.
+
+### Auto restore feature
+
+When a flow accesses a set or state that is not configured, the set or state will be created. This is useful for when
+the settings of this app have been lost, but the flows still exist.
  
 ## Flows
 
