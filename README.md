@@ -128,8 +128,8 @@ Arguments: set, state, trigger
 
 Triggers the flow when *state* is activated in *set*. 
 
-If *trigger* is set to **changed**, this will only trigger when the state was previously not active. 
-If *trigger* is set to **always**, this will trigger whenever the state is activated by an action, even if it already was.
+If *trigger* is set to `changed`, this will only trigger when the state was previously not active. 
+If *trigger* is set to `always`, this will trigger whenever the state is activated by an action, even if it already was.
 
 **State deactivated**
 
@@ -137,8 +137,8 @@ Arguments: set, state, trigger
 
 Triggers the flow when *state* is deactivated in *set*. 
 
-If *trigger* is set to **changed**, this will only trigger when the state was previously active. 
-If *trigger* is set to **always**, this will trigger whenever the state is deactivated, even if it already was.
+If *trigger* is set to `changed`, this will only trigger when the state was previously active. 
+If *trigger* is set to `always`, this will trigger whenever the state is deactivated, even if it already was.
 
 **Change**
 
