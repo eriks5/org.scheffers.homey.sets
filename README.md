@@ -33,9 +33,7 @@ The following conditions are available:
  
 ## Changelog
 
-v0.1.0: Auto-restore feature added: sets and states will be re-created using info in flows.
-
-v0.0.2: Two crashes fixed
+v0.1.1: Auto-restore feature added: sets and states will be re-created using info in flows.
 
 v0.0.1: Initial release
 
