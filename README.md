@@ -33,6 +33,8 @@ The following conditions are available:
  
 ## Changelog
 
+v0.0.2: Two crashes fixed
+
 v0.0.1: Initial release
 
 ## Settings
