@@ -90,6 +90,12 @@ Arguments: set
 
 Deactivate all states *set*.
 
+**Activate exactly one**
+
+Arguments: set, state
+
+Activate *state* in *set* and deactivate all other states in *set*
+
 ### Trigger cards
 
 **Some states active**

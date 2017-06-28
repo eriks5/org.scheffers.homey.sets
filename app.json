@@ -13,7 +13,7 @@
     "en": ["Set", "Sets", "State", "States", "Combine actions"],
     "nl": ["Verzameling", "Verzamelingen", "Toestand", "Toestanden", "Combineer acties"]
   },
-  "version": "0.1.2",
+  "version": "0.2.0",
   "compatibility": ">=1.2",
   "author": {
     "name": "Erik Scheffers",
@@ -420,6 +420,31 @@
             "placeholder": {
               "en": "Set",
               "nl": "Verzameling"
+            }
+          }
+        ]
+      },
+      {
+        "id": "activate_one",
+        "title": {
+          "en": "Activate exactly one",
+          "nl": "Activeer precies een"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          },
+          {
+            "name": "state",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "State",
+              "nl": "Toestand"
             }
           }
         ]
