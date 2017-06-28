@@ -1,4 +1,4 @@
-# Sets for Homey
+# State sets for Homey
 
 ## About
 
@@ -14,24 +14,28 @@ in flows.
 
 The following flow actions are available:
  
- * Activate or deactivate a state in a set,
+ * Activate or deactivate a state in a set without changing the other states,
+ * Activate one state in a set and deactivate the others, or
  * Activate a state in a set temporarily, or
- * Activate or deactivate all states in a set
+ * Activate a state in a set after a delay, or
+ * Activate or deactivate all states in a set.
  
-The following triggers are available to trigger other flows:
+The following triggers are available to trigger flows:
 
- * A specific state is activated or deactivated,
- * The set changes from having no states active to having one or more states active,
+ * A specific state is activated or deactivated, or
+ * The set changes from having no states active to having one or more states active, or
  * The set changes from having all states active to having one or more states inactive, or
- * Just trigger on any change in a set (useful in combination with conditions)
+ * Trigger on any change in a set (useful in combination with conditions)
   
 The following conditions are available:
 
- * No states of a set are active, 
- * All states of a set are active,
+ * No states of a set are active, or 
+ * All states of a set are active, or
  * A specific state of a set is active
  
 ## Changelog
+
+v0.2.0: Added **Activate exactly one** and **Activate state delayed** actions
 
 v0.1.1: Auto-restore feature added: sets and states will be re-created using info in flows.
 
@@ -72,7 +76,19 @@ Arguments: set, state, timeout
 
 Activate *state* in *set* for *timeout* seconds, then deactivate it.
 
-**Deativate state**
+If the state gets updated (either activated or deactivated) by another action before the timer ends,
+the timeout is cancelled.
+
+**Activate state delayed**
+
+Arguments: set, state, delay
+
+Activate *state* in *set* after *delay* seconds if it is deactivated.
+
+If the state gets updated (either activated or deactivated) by another action before the timer ends,
+the delay is cancelled.
+
+**Deactivate state**
 
 Arguments: set, state
 
