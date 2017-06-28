@@ -366,6 +366,40 @@
         ]
       },
       {
+        "id": "activate_delayed",
+        "title": {
+          "en": "Activate state delayed",
+          "nl": "Activeer toestand met vertraging"
+        },
+        "args": [
+          {
+            "name": "set",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Set",
+              "nl": "Verzameling"
+            }
+          },
+          {
+            "name": "state",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "State",
+              "nl": "Toestand"
+            }
+          },
+          {
+            "name": "delay",
+            "type": "number",
+            "min": 0,
+            "placeholder": {
+              "en": "Delay",
+              "nl": "Vertraging"
+            }
+          }
+        ]
+      },
+      {
         "id": "deactivate_state",
         "title": {
           "en": "Deactivate state",

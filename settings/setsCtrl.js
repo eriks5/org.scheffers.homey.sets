@@ -96,9 +96,10 @@ angular.module('setsApp', []).controller('setsCtrl', ['$scope', '$rootScope', fu
         label: labels[stateId]
       };
 
+      var timer = timers[stateId];
       if (state){
-        var timer = timers[stateId];
-        if (timer){
+        //noinspection EqualityComparisonWithCoercionJS
+        if (timer != null && timer > 0){
           item.type = 'timed';
           item.timer = timer;
         }
@@ -107,7 +108,14 @@ angular.module('setsApp', []).controller('setsCtrl', ['$scope', '$rootScope', fu
         }
       }
       else {
-        item.type = 'inactive';
+        //noinspection EqualityComparisonWithCoercionJS
+        if (timer != null && timer < 0){
+          item.type = 'delayed';
+          item.timer = -timer;
+        }
+        else {
+          item.type = 'inactive';
+        }
       }
 
       result.push(item);
