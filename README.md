@@ -35,7 +35,7 @@ The following conditions are available:
  
 ## Changelog
 
-v0.2.0: Added **Activate exactly one** and **Activate state delayed** actions
+v0.2.0: Added *Activate exactly one* and *Activate state delayed* actions
 
 v0.1.1: Auto-restore feature added: sets and states will be re-created using info in flows.
 
