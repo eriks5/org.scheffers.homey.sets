@@ -2,14 +2,12 @@ angular.module('setsApp', []).controller('setsCtrl', ['$scope', '$rootScope', fu
   var equals = angular.equals;
   var forEach = angular.forEach;
   var hasOwnProperty = Object.hasOwnProperty;
-  var api;
+  var Homey;
 
   sc._statesCache = {};
 
   sc.$on('ready', function(){
-    var Homey = window.Homey;
-    api = Homey.api;
-
+    Homey = window.Homey;
     Homey.on('sets_changed', handleSetsChanged);
     Homey.on('states_changed', handleStatesChanged);
     Homey.on('timers_changed', handleTimersChanged);
@@ -22,7 +20,7 @@ angular.module('setsApp', []).controller('setsCtrl', ['$scope', '$rootScope', fu
   };
 
   function readInitialState() {
-    api("GET", "/", function(err, result){
+    Homey.api("GET", "/", function(err, result){
       if (err){
         return sc.error(err);
       }
@@ -139,7 +137,7 @@ angular.module('setsApp', []).controller('setsCtrl', ['$scope', '$rootScope', fu
   };
 
   sc.createSet = function(newSet){
-    api("POST", "/set", newSet, function(err){
+    Homey.api("POST", "/set", newSet, function(err){
       if (err){
         return sc.error(err);
       }
@@ -148,7 +146,7 @@ angular.module('setsApp', []).controller('setsCtrl', ['$scope', '$rootScope', fu
   };
 
   sc.deleteSet = function(set){
-    api("DELETE", "/set/"+set.id, function(err){
+    Homey.api("DELETE", "/set/"+set.id, function(err){
       if (err){
         return sc.error(err);
       }
@@ -156,7 +154,7 @@ angular.module('setsApp', []).controller('setsCtrl', ['$scope', '$rootScope', fu
   };
 
   sc.createState = function(setId, newState){
-    api("POST", "/set/"+setId+"/state", newState, function(err){
+    Homey.api("POST", "/set/"+setId+"/state", newState, function(err){
       if (err){
         return sc.error(err);
       }
@@ -165,7 +163,7 @@ angular.module('setsApp', []).controller('setsCtrl', ['$scope', '$rootScope', fu
   };
 
   sc.deleteState = function(setId, stateId){
-    api("DELETE", "/set/"+setId+"/state/"+stateId, function(err){
+    Homey.api("DELETE", "/set/"+setId+"/state/"+stateId, function(err){
       if (err){
         return sc.error(err);
       }
@@ -173,7 +171,7 @@ angular.module('setsApp', []).controller('setsCtrl', ['$scope', '$rootScope', fu
   };
 
   sc.toggleState = function(setId, stateId){
-    api("PUT", "/set/"+setId+"/state/"+stateId, function(err){
+    Homey.api("PUT", "/set/"+setId+"/state/"+stateId, function(err){
       if (err){
         return sc.error(err);
       }

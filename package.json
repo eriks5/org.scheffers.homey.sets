@@ -1,6 +1,6 @@
 {
   "name": "org.scheffers.homey.sets",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Sets for Homey",
   "main": "app.js",
   "dependencies": {},
