@@ -1,1 +1,14 @@
-{}
+{
+  "settings": {
+    "title": "Beheer verzamelingen",
+    "add-set": "Nieuwe verzameling",
+    "set-name": "naam",
+    "create-set": "Maak verzameling",
+    "cancel": "Annuleer",
+    "add-states-to-use": "Voeg toestanden aan de verzameling toe om deze te kunnen gebruiken.",
+    "state-name": "naam",
+    "new-state": "Nieuwe toestand",
+    "remove-set": "Verwijder",
+    "edit-set": "Wijzig"
+  }
+}
