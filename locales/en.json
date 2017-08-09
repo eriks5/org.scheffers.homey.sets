@@ -3,6 +3,7 @@
     "title": "Sets management",
     "add-set": "New set",
     "set-name": "set name",
+    "copy-set": "Copy states from another set (optional)",
     "create-set": "Create set",
     "cancel": "Cancel",
     "add-states-to-use": "Add states to the set to use it.",

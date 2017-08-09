@@ -23,7 +23,13 @@ module.exports = [
     method: "POST",
     path: "/set/",
     role: "owner",
-    fn: callbackResult(args => setManager.getSetId(args.body.label))
+    fn: callbackResult(args => {
+      const setId = setManager.getSetId(args.body.label);
+      if (args.body.copyFrom){
+        setManager.copyStates(args.body.copyFrom, setId);
+      }
+      return setId;
+    })
   },
   {
     description: "Delete set",
