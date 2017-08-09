@@ -179,5 +179,5 @@ angular.module('setsApp', []).controller('setsCtrl', ['$scope', '$rootScope', fu
     });
   };
 
-  console.log('controller loaded');
+  // console.log('controller loaded');
 }]);

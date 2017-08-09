@@ -8,7 +8,7 @@ module.exports = {
     setManager.init();
     flow.init(setManager);
 
-    console.log('App started')
+    // console.log('App started')
   },
 
   setManager: setManager

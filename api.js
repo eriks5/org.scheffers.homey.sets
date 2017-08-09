@@ -14,7 +14,7 @@ function callbackResult(fn){
   }
 }
 
-console.log('API loaded');
+// console.log('API loaded');
 
 module.exports = [
   // Configuration
