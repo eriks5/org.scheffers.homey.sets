@@ -5,9 +5,9 @@ angular.module('setsApp', []).controller('setsCtrl', ['$scope', '$rootScope', fu
 
   sc._statesCache = {};
 
-  sc.$on('ready', function(){
-    var Homey = sc.Homey = window.Homey;
-    sc.__ = window.__;
+  sc.$on('ready', function(event, Homey){
+    sc.Homey = Homey;
+    sc.__ = Homey.__;
 
     Homey.on('sets_changed', handleSetsChanged);
     Homey.on('states_changed', handleStatesChanged);

@@ -1,8 +1,9 @@
 ﻿<!doctype html>
 <html>
 <head>
-    <script type="text/javascript" src="/manager/webserver/assets/js/angular.js"></script>
-    <script type="text/javascript" src="setsCtrl.js"></script>
+    <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+    <script type="text/javascript" src="/manager/webserver/assets/js/angular.js" data-origin="settings"></script>
+    <script type="text/javascript" src="setsCtrl.js" data-origin="settings"></script>
     <style>
         #sets {
             clear: both;
@@ -187,9 +188,9 @@
     </ul>
 
     <script type="text/javascript">
-      function onHomeyReady() {
+      function onHomeyReady(Homey) {
         var sc = angular.element(document.body).scope();
-        sc.$emit("ready");
+        sc.$emit("ready", Homey);
         Homey.ready();
       }
     </script>
