@@ -1,16 +1,14 @@
 "use strict";
 
-const setManager = Homey.app.setManager;
+const Homey = require('homey');
 
 function callbackResult(fn){
-  return (callback, args) => {
-    const result = fn(args);
-    if (result){
-      callback(null, result);
-    }
-    else {
-      callback(result, null);
-    }
+  return (args, callback) => {
+    fn(args).then(
+      result => result ? callback(null, result) : callback(result, null)
+    ).catch(
+      err => callback(err, null)
+    );
   }
 }
 
@@ -23,10 +21,10 @@ module.exports = [
     method: "POST",
     path: "/set/",
     role: "owner",
-    fn: callbackResult(args => {
-      const setId = setManager.getSetId(args.body.label);
+    fn: callbackResult(async args => {
+      const setId = await Homey.app.getSetId(args.body.label);
       if (args.body.copyFrom){
-        setManager.copyStates(args.body.copyFrom, setId);
+        await Homey.app.copyStates(args.body.copyFrom, setId);
       }
       return setId;
     })
@@ -36,16 +34,16 @@ module.exports = [
     method: "DELETE",
     path: "/set/:set",
     role: "owner",
-    fn: callbackResult(args => setManager.deleteSet(args.params.set))
+    fn: callbackResult(args => Homey.app.deleteSet(args.params.set))
   },
   {
     description: "Add state to set",
     method: "POST",
     path: "/set/:set/state/",
     role: "owner",
-    fn: callbackResult(args => {
-      const stateId = setManager.getStateId(args.body.label);
-      return stateId && setManager.addState(args.params.set, stateId);
+    fn: callbackResult(async args => {
+      const stateId = await Homey.app.getStateId(args.body.label);
+      return stateId && await Homey.app.addState(args.params.set, stateId);
     })
   },
   {
@@ -53,7 +51,7 @@ module.exports = [
     method: "DELETE",
     path: "/set/:set/state/:state",
     role: "owner",
-    fn: callbackResult(args => setManager.deleteState(args.params.set, args.params.state))
+    fn: callbackResult(args => Homey.app.deleteState(args.params.set, args.params.state))
   },
 
   // Access
@@ -61,7 +59,7 @@ module.exports = [
     description: "Get full state",
     method: "GET",
     path: "/",
-    fn: callbackResult(setManager.getFullState)
+    fn: callbackResult(() => Homey.app.getFullState())
   },
 
   // Control
@@ -69,6 +67,6 @@ module.exports = [
     description: "Toggle state",
     method: "PUT",
     path: "/set/:set/state/:state",
-    fn: callbackResult(args => setManager.setState(args.params.set, args.params.state, null))
+    fn: callbackResult(args => Homey.app.setState(args.params.set, args.params.state, null))
   }
 ];
