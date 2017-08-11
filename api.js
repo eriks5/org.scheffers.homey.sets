@@ -59,7 +59,7 @@ module.exports = [
     description: "Get full state",
     method: "GET",
     path: "/",
-    fn: callbackResult(() => Homey.app.getFullState())
+    fn: (args, callback) => callback(null, Homey.app.getFullState())
   },
 
   // Control
