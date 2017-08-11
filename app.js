@@ -51,9 +51,9 @@ function getSettings(name){
   return Homey.ManagerSettings.get(name);
 }
 
-async function updateSettings(name, data){
+function updateSettings(name, data){
   //noinspection JSUnresolvedFunction,JSUnresolvedVariable
-  await Homey.ManagerSettings.set(name, data);
+  Homey.ManagerSettings.set(name, data);
   log(`Settings update: "${name}"`, name, data);
 }
 
@@ -82,9 +82,9 @@ function allStates(states, state){
   return true;
 }
 
-async function getProperty(setId, propName){
+function getProperty(setId, propName){
   // Get a property of a set
-  let set = (await getSettings('sets') || {})[setId];
+  let set = (getSettings('sets') || {})[setId];
   return set ? set[propName] : null;
 }
 
@@ -123,12 +123,12 @@ function getSetState(setId, set){
   }
 }
 
-async function getSetsState(){
+function getSetsState(){
   let sets = [];
-  const setsSetting = await getSettings('sets') || {};
+  const setsSetting = getSettings('sets') || {};
   for (let setId in setsSetting){
     if (setsSetting.hasOwnProperty(setId)){
-      sets.push(await getSetState(setId, setsSetting[setId]));
+      sets.push(getSetState(setId, setsSetting[setId]));
     }
   }
 
@@ -159,38 +159,42 @@ async function triggerNoneAll(setId, type, oldState, newState){
   oldState !== newState && await trigger(type+'_active_changed', {setId});
 }
 
-function triggerChange(setId){
-  return trigger('change', {setId});
+async function triggerChange(setId){
+  return await trigger('change', {setId});
 }
 
 async function updateStateUseCount(stateId, change){
   // Update use counter of state
   // If use becomes zero, delete the state
-  let states = await getSettings('states') || {};
+  let states = getSettings('states') || {};
   let state = states[stateId];
 
   if (state){
     state.use += change;
     if (state.use <= 0){
-      let stateLabels = await getSettings('stateLabels') || {};
-      delete stateLabels[state.label];
-      await updateApi('states_changed', {[stateId]: null});
-      await updateSettings('stateLabels', stateLabels);
-      delete states[stateId];
-    }
+      let stateLabels = getSettings('stateLabels') || {};
 
-    await updateSettings('states', states);
+      delete stateLabels[state.label];
+      delete states[stateId];
+
+      updateSettings('stateLabels', stateLabels);
+      updateSettings('states', states);
+      await updateApi('states_changed', {[stateId]: null});
+    }
+    else {
+      updateSettings('states', states);
+    }
   }
 }
 
 async function clearAllTimers(setId) {
-  const allTimers = await getSettings('timers') || {};
+  const allTimers = getSettings('timers') || {};
 
   if (allTimers.hasOwnProperty(setId)) {
     delete allTimers[setId];
     log('timers', setId, 'deleted');
+    updateSettings('timers', allTimers);
     await updateApi('timers_changed', allTimers);
-    await updateSettings('timers', allTimers);
   }
 }
 
@@ -216,7 +220,7 @@ async function updateSet(setId, stateId, newState, del) {
   // If newState === null toggles existing state
   // If newState === undefined state is not updated
   // When del === true, delete state from set
-  let sets = await getSettings('sets') || {};
+  let sets = getSettings('sets') || {};
   let set = sets[setId];
   if (!set){
     log('updateSet with invalid setId', setId);
@@ -262,14 +266,14 @@ async function updateSet(setId, stateId, newState, del) {
     set.all = allStates(set.states, true);
     set.active = countActive(set.states);
 
+    updateSettings('sets', sets);
     await updateApi('sets_changed', {[setId]: getSetState(setId, set)});
-    await updateSettings('sets', sets);
   }
 
   // Update timers
   if (newState !== oldState) {
     let changed = false;
-    let allTimers = await getSettings('timers') || {};
+    let allTimers = getSettings('timers') || {};
     let setTimers = allTimers[setId] || {};
 
     if (isNumber(newState)){
@@ -291,8 +295,8 @@ async function updateSet(setId, stateId, newState, del) {
 
     if (changed) {
       allTimers[setId] = setTimers;
+      updateSettings('timers', allTimers);
       await updateApi('timers_changed', allTimers);
-      await updateSettings('timers', allTimers);
     }
   }
 
@@ -309,7 +313,7 @@ async function updateSet(setId, stateId, newState, del) {
 }
 
 async function setAll(setId, state){
-  let sets = await getSettings('sets') || {};
+  let sets = getSettings('sets') || {};
   let set = sets[setId];
   if (!set){
     log('setAll with invalid setId', setId);
@@ -341,8 +345,8 @@ async function setAll(setId, state){
 
   log('set', setId, '=', set);
   if (changed){
+    updateSettings('sets', sets);
     await updateApi('sets_changed', {[setId]: getSetState(setId, set)});
-    await updateSettings('sets', sets);
   }
 
   await clearAllTimers(setId);
@@ -363,7 +367,7 @@ async function setAll(setId, state){
 
 async function setExactlyOne(setId, stateId){
   // Set one state, reset all other states
-  let sets = await getSettings('sets') || {};
+  let sets = getSettings('sets') || {};
   let set = sets[setId];
   if (!set){
     log('setExactlyOne with invalid setId', setId);
@@ -401,8 +405,8 @@ async function setExactlyOne(setId, stateId){
 
   log('set', setId, '=', set);
   if (changed){
+    updateSettings('sets', sets);
     await updateApi('sets_changed', {[setId]: await getSetState(setId, set)});
-    await updateSettings('sets', sets);
   }
 
   await clearAllTimers(setId);
@@ -423,15 +427,15 @@ async function setExactlyOne(setId, stateId){
 
 //noinspection JSUnresolvedVariable
 async function setDelay(setId, stateId, delay) {
-  let allTimers = await getSettings('timers') || {};
+  let allTimers = getSettings('timers') || {};
   let setTimers = allTimers[setId] || {};
 
   setTimers[stateId] = -delay;
   log('timers ', setId, '=', setTimers);
 
   allTimers[setId] = setTimers;
+  updateSettings('timers', allTimers);
   await updateApi('timers_changed', allTimers);
-  await updateSettings('timers', allTimers);
 }
 
 function compareAutoCompletionFn(l, r){
@@ -440,7 +444,7 @@ function compareAutoCompletionFn(l, r){
 
 async function tickTock(){
   // Decrease every timer
-  let allTimers = await getSettings('timers');
+  let allTimers = getSettings('timers');
   if (!allTimers || isEmptyObject(allTimers)){
     return;
   }
@@ -485,12 +489,13 @@ async function tickTock(){
     }
   }
 
-  await updateApi('timers_changed', allTimers);
-  await updateSettings('timers', allTimers);
-
-  // Update states of expired states
-  if (!isEmptyObject(newStates)){
-    let sets = await getSettings('sets') || {};
+  if (isEmptyObject(newStates)) {
+    updateSettings('timers', allTimers);
+    await updateApi('timers_changed', allTimers);
+  }
+  else {
+    // Update states of expired states
+    let sets = getSettings('sets') || {};
     let wasAll = {}, wasNone = {}, apiChanges = {};
 
     for (let setId in newStates) {
@@ -501,7 +506,7 @@ async function tickTock(){
         wasNone[setId] = set.none;
 
         for (let stateId in newState) {
-          if (newState.hasOwnProperty(stateId)){
+          if (newState.hasOwnProperty(stateId)) {
             set.states[stateId] = newState[stateId];
           }
         }
@@ -511,19 +516,22 @@ async function tickTock(){
         set.active = countActive(set.states);
 
         log('set', setId, '=', set);
-        apiChanges[setId] = await getSetState(setId, set);
+        apiChanges[setId] = getSetState(setId, set);
       }
+
     }
 
+    updateSettings('sets', sets);
+    updateSettings('timers', allTimers);
     await updateApi('sets_changed', apiChanges);
-    await updateSettings('sets', sets);
+    await updateApi('timers_changed', allTimers);
 
     // Trigger flows for every changed set
     for (let setId in newStates) {
-      if (newStates.hasOwnProperty(setId)){
+      if (newStates.hasOwnProperty(setId)) {
         const newState = newStates[setId];
         for (let stateId in newState) {
-          if (newState.hasOwnProperty(stateId)){
+          if (newState.hasOwnProperty(stateId)) {
             await triggerStateChange(setId, stateId, !newState[stateId], newState[stateId]);
           }
         }
@@ -549,7 +557,7 @@ class SetsApp extends Homey.App {
       log('=======================');
     }
 
-    setInterval(() => tickTock().then().catch(e => {throw(e)}), 1000);
+    setInterval(() => tickTock().catch(e => {throw e}), 1000);
   }
 
   // noinspection JSMethodCanBeStatic
@@ -560,8 +568,8 @@ class SetsApp extends Homey.App {
       return false;
     }
 
-    let setLabels = await getSettings('setLabels') || {};
-    let sets = await getSettings('sets') || {};
+    let setLabels = getSettings('setLabels') || {};
+    let sets = getSettings('sets') || {};
 
     if (!setId){
       setId = setLabels[label] || getUUID();
@@ -578,12 +586,13 @@ class SetsApp extends Homey.App {
       };
 
       sets[setId] = set;
-      log('set', setId, '=', sets[setId]);
-      await updateApi('sets_changed', {[setId]: getSetState(setId, set)});
-      await updateSettings('sets', sets);
-
       setLabels[label] = setId;
-      await updateSettings('setLabels', setLabels);
+
+      log('set', setId, '=', sets[setId]);
+
+      updateSettings('sets', sets);
+      updateSettings('setLabels', setLabels);
+      await updateApi('sets_changed', {[setId]: getSetState(setId, set)});
     }
 
     return setId;
@@ -593,7 +602,7 @@ class SetsApp extends Homey.App {
   async deleteSet(setId){
     setId = ""+setId;
 
-    let sets = await getSettings('sets') || {};
+    let sets = getSettings('sets') || {};
     let set = sets[setId];
 
     if (set) {
@@ -603,20 +612,22 @@ class SetsApp extends Homey.App {
       }
 
       delete sets[setId];
-      await updateApi('sets_changed', {[setId]: null});
-      await updateSettings('sets', sets);
+
+      updateSettings('sets', sets);
       log('Deleted setId', setId);
 
-      let setLabels = await getSettings('setLabels') || {};
+      let setLabels = getSettings('setLabels') || {};
       delete setLabels[set.label];
-      await updateSettings('setLabels', setLabels);
+      updateSettings('setLabels', setLabels);
 
-      const timers = await getSettings('timers') || {};
+      const timers = getSettings('timers') || {};
       if (timers.hasOwnProperty(setId)) {
         delete timers[setId];
         log('timers', setId, 'deleted');
-        await updateSettings('timers', timers);
+        updateSettings('timers', timers);
       }
+
+      await updateApi('sets_changed', {[setId]: null});
     }
 
     return true;
@@ -630,22 +641,22 @@ class SetsApp extends Homey.App {
       return false;
     }
 
-    let stateLabels = await getSettings('stateLabels') || {};
-    let states = await getSettings('states') || {};
+    let stateLabels = getSettings('stateLabels') || {};
+    let states = getSettings('states') || {};
 
     if (!stateId){
       stateId = stateLabels[label] || getUUID();
     }
     if (!states[stateId] && !stateLabels[label]){
       stateLabels[label] = stateId;
-      await updateSettings('stateLabels', stateLabels);
+      updateSettings('stateLabels', stateLabels);
 
       states[stateId] = {
         label: label,
         use: 0,
       };
+      updateSettings('states', states);
       await updateApi('states_changed', {[stateId]: label});
-      await updateSettings('states', states);
     }
 
     return stateId;
@@ -664,9 +675,9 @@ class SetsApp extends Homey.App {
   }
 
   // noinspection JSMethodCanBeStatic, JSUnusedGlobalSymbols
-  async getTimeout(setId, stateId){
+  getTimeout(setId, stateId){
     // Get timeout for state
-    const allTimers = await getSettings('timers') || {};
+    const allTimers = getSettings('timers') || {};
     const setTimers = allTimers[""+setId] || {};
     return setTimers[""+stateId] || 0;
   }
@@ -677,10 +688,10 @@ class SetsApp extends Homey.App {
   }
 
   // noinspection JSMethodCanBeStatic, JSUnusedGlobalSymbols
-  async getStateLabel(stateId){
+  getStateLabel(stateId){
     stateId = ""+stateId;
 
-    const states = await getSettings('states');
+    const states = getSettings('states');
     if (states && states.hasOwnProperty(stateId)) {
       return states[stateId].label;
     }
@@ -703,19 +714,19 @@ class SetsApp extends Homey.App {
   }
 
   // noinspection JSMethodCanBeStatic
-  async getFullState(){
+  getFullState(){
     // Get current state for settings page
-    let sets = await getSetsState();
+    let sets = getSetsState();
 
     let states = {};
-    const statesSetting = await getSettings('states') || {};
+    const statesSetting = getSettings('states') || {};
     for (let stateId in statesSetting){
       if (statesSetting.hasOwnProperty(stateId)){
         states[stateId] = statesSetting[stateId].label;
       }
     }
 
-    let timers = await getSettings('timers') || {};
+    let timers = getSettings('timers') || {};
 
     return {states, sets, timers}
   }
@@ -733,7 +744,7 @@ class SetsApp extends Homey.App {
     fromSetId = ""+fromSetId;
     toSetId = ""+toSetId;
 
-    let sets = await getSettings('sets') || {};
+    let sets = getSettings('sets') || {};
     let fromSet = sets[fromSetId];
     let toSet = sets[toSetId];
 
@@ -785,12 +796,12 @@ class SetsApp extends Homey.App {
   }
 
   // noinspection JSMethodCanBeStatic
-  async autoCompleteSet(partial){
+  autoCompleteSet(partial){
     let results = [];
 
     partial = partial.toLowerCase();
 
-    const sets = await getSettings('sets') || {};
+    const sets = getSettings('sets') || {};
 
     for (let setId in sets){
       if (sets.hasOwnProperty(setId)){
@@ -809,16 +820,16 @@ class SetsApp extends Homey.App {
   }
 
   // noinspection JSMethodCanBeStatic
-  async autoCompleteState(setId, partial){
+  autoCompleteState(setId, partial){
     let results = [];
 
     partial = partial.toLowerCase();
 
-    const sets = await getSettings('sets') || {};
+    const sets = getSettings('sets') || {};
     const set = sets[""+setId];
 
     if (set){
-      const states = await getSettings('states') || {};
+      const states = getSettings('states') || {};
       const setStates = set.states;
       for (let stateId in setStates){
         if (setStates.hasOwnProperty(stateId) && states.hasOwnProperty(stateId)){
