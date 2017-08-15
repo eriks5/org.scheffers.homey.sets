@@ -35,11 +35,22 @@ The following conditions are available:
  
 ## Changelog
 
-v0.2.0: Added *Activate exactly one* and *Activate state delayed* actions
+v0.3.0: 
+* Added Dutch translation for settings
+* Added option to copy states from another set
+* Fixed a crash
 
-v0.1.1: Auto-restore feature added: sets and states will be re-created using info in flows.
+v0.2.1: 
+* Small fix for Homey firmware 1.5
 
-v0.0.1: Initial release
+v0.2.0: 
+* Added *Activate exactly one* and *Activate state delayed* actions
+
+v0.1.1: 
+* Auto-restore feature added: sets and states will be re-created using info in flows.
+
+v0.0.1: 
+* Initial release
 
 ## Settings
  
