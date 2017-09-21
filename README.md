@@ -35,6 +35,12 @@ The following conditions are available:
  
 ## Changelog
 
+v0.3.2:
+* Fixed bug that could cause states with empty label to be created
+
+v0.3.1:
+* Updated to SDK 2
+
 v0.3.0: 
 * Added Dutch translation for settings
 * Added option to copy states from another set
