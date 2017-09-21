@@ -647,10 +647,11 @@ class SetsApp extends Homey.App {
     if (!stateId){
       stateId = stateLabels[label] || getUUID();
     }
-    if (!states[stateId] && !stateLabels[label]){
+    if (!stateLabels[label]) {
       stateLabels[label] = stateId;
       updateSettings('stateLabels', stateLabels);
-
+    }
+    if (!states[stateId]){
       states[stateId] = {
         label: label,
         use: 0,
