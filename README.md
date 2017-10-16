@@ -35,6 +35,12 @@ The following conditions are available:
  
 ## Changelog
 
+v0.3.3:
+* If 'Activate state delayed' action was executed on a state that had a timer running, 
+the timer would not be stopped.
+* If 'Deactivate state' action was executed on a stated with a delay timer (so not active yet), that
+delay would not get cancelled.
+
 v0.3.2:
 * Fixed bug that could cause states with empty label to be created
 
@@ -101,6 +107,8 @@ the timeout is cancelled.
 Arguments: set, state, delay
 
 Activate *state* in *set* after *delay* seconds if it is deactivated.
+
+If the state is already active, does nothing. If the state has a timer running, the timer is cancelled.
 
 If the state gets updated (either activated or deactivated) by another action before the timer ends,
 the delay is cancelled.

@@ -13,7 +13,7 @@
     "en": ["Set", "Sets", "State", "States", "Combine actions"],
     "nl": ["Verzameling", "Verzamelingen", "Toestand", "Toestanden", "Combineer acties"]
   },
-  "version": "0.3.2",
+  "version": "0.3.3",
   "compatibility": ">=1.5",
   "author": {
     "name": "Erik Scheffers",

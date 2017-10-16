@@ -271,10 +271,11 @@ async function updateSet(setId, stateId, newState, del) {
   }
 
   // Update timers
-  if (newState !== oldState) {
+  const allTimers = getSettings('timers') || {};
+  const setTimers = allTimers[setId] || {};
+  const hasTimer = setTimers.hasOwnProperty(stateId);
+  if (newState !== oldState || hasTimer) {
     let changed = false;
-    let allTimers = getSettings('timers') || {};
-    let setTimers = allTimers[setId] || {};
 
     if (isNumber(newState)){
       if (setTimers[stateId] !== newState) {
@@ -283,7 +284,7 @@ async function updateSet(setId, stateId, newState, del) {
         changed = true;
       }
     }
-    else if (setTimers.hasOwnProperty(stateId)){
+    else if (hasTimer){
       delete setTimers[stateId];
       if (isEmptyObject(setTimers)){
         log('timers', setId, 'deleted');
@@ -788,10 +789,11 @@ class SetsApp extends Homey.App {
     setId = ""+setId;
     stateId = ""+stateId;
 
-    if (delay <= 0){
+    const state = await getState(setId, stateId);
+    if (delay <= 0 || state){
       await updateSet(setId, stateId, true);
     }
-    else if (await getState(setId, stateId) === false){
+    else {
       await setDelay(setId, stateId, delay);
     }
   }
