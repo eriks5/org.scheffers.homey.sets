@@ -124,7 +124,7 @@
 <body ng-app="setsApp" ng-controller="setsCtrl">
     <div ng-if="!showAddSetForm" class="pull-right set-add-button">
         <button ng-click="doShowAddSetForm(true)">
-            <i class="fa fa-plus-circle" aria-hidden="true"></i> {{__("settings.add-set")}}
+            <i class="fas fa-plus-circle" aria-hidden="true"></i> {{__("settings.add-set")}}
         </button>
     </div>
     <h2 data-i18n="settings.title"></h2>
@@ -142,10 +142,10 @@
                 </div>
                 <div>
                     <button ng-disable="!newSet.label" ng-click="createSet(newSet)">
-                        <i class="fa fa-plus" aria-hidden="true"></i> {{__("settings.create-set")}}
+                        <i class="fas fa-plus" aria-hidden="true"></i> {{__("settings.create-set")}}
                     </button>
                     <button ng-click="doShowAddSetForm(false)">
-                        <i class="fa fa-times" aria-hidden="true"></i> {{__("settings.cancel")}}
+                        <i class="fas fa-times" aria-hidden="true"></i> {{__("settings.cancel")}}
                     </button>
                 </div>
             </form>
@@ -159,14 +159,14 @@
                 <ul ng-if="nStates || editSet===set.id" class="states">
                     <li ng-repeat="state in getStates(set) | orderBy:'label'">
                         <span ng-click="toggleState(set.id, state.id)" class="state state-{{ state.type }}">{{ state.label }}</span>
-                        <span ng-if="state.timer" class="state-timer"><i class="fa fa-hourglass-o" aria-hidden="true"></i>{{ state.timer }}</span>
-                        <span ng-if="editSet===set.id" ng-click="deleteState(set.id, state.id)" class="state-delete"><i class="fa fa-trash-o"></i></span>
+                        <span ng-if="state.timer" class="state-timer"><i class="fas fa-hourglass-o" aria-hidden="true"></i>{{ state.timer }}</span>
+                        <span ng-if="editSet===set.id" ng-click="deleteState(set.id, state.id)" class="state-delete"><i class="fas fa-trash-alt"></i></span>
                     </li>
                     <li ng-if="editSet===set.id">
                         <form novalidate>
                             <input type="text" id="addStateLabel" ng-attr-placeholder="{{__('settings.state-name')}}" ng-model="newState.label" required>
                             <button ng-disable="!newState.label" ng-click="createState(set.id, newState)">
-                                <i class="fa fa-plus" aria-hidden="true"></i> {{__("settings.new-state")}}
+                                <i class="fas fa-plus" aria-hidden="true"></i> {{__("settings.new-state")}}
                             </button>
                         </form>
                     </li>
@@ -174,13 +174,13 @@
             </div>
             <div class="buttons">
                 <button ng-if="editSet===set.id && !nStates" ng-click="deleteSet(set)">
-                    <i class="fa fa-trash-o" aria-hidden="true"></i> {{__("settings.remove-set")}}
+                    <i class="fas fa-trash-alt" aria-hidden="true"></i> {{__("settings.remove-set")}}
                 </button>
                 <button ng-if="editSet===set.id" ng-click="enableEditSet()">
-                    <i class="fa fa-fw fa-check-square-o" aria-hidden="true"></i> {{__("settings.edit-set")}}
+                    <i class="fas fa-check" aria-hidden="true"></i> {{__("settings.edit-set")}}
                 </button>
                 <button ng-if="editSet!==set.id" ng-click="enableEditSet(set.id)">
-                    <i class="fa fa-fw fa-square-o" aria-hidden="true"></i> {{__("settings.edit-set")}}
+                    <i class="fas fa-edit" aria-hidden="true"></i> {{__("settings.edit-set")}}
                 </button>
             </div>
         </li>
