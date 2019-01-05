@@ -65,7 +65,7 @@ module.exports = [
   // Control
   {
     description: "Toggle state",
-    method: "PUT",
+    method: "POST",
     path: "/set/:set/state/:state",
     fn: callbackResult(args => Homey.app.setState(args.params.set, args.params.state, null))
   }

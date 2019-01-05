@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html>
 <head>
     <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
@@ -361,7 +361,7 @@
         };
 
         sc.toggleState = function(setId, stateId){
-          sc.Homey.api("PUT", "/set/"+setId+"/state/"+stateId, function(err){
+          sc.Homey.api("POST", "/set/"+setId+"/state/"+stateId, {}, function(err){
             if (err){
               return sc.error(err);
             }
