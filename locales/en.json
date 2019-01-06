@@ -1,15 +1,13 @@
 {
   "settings": {
-    "title": "Sets management",
     "add-set": "New set",
     "set-name": "set name",
     "copy-set": "Copy states from another set (optional)",
+    "copy-set-select": "Select set",
     "create-set": "Create set",
     "cancel": "Cancel",
     "add-states-to-use": "Add states to the set to use it.",
     "state-name": "state name",
-    "new-state": "New state",
-    "remove-set": "Remove set",
-    "edit-set": "Edit set"
+    "new-state": "New state"
   }
 }
