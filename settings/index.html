@@ -35,7 +35,7 @@
             padding: 5px 0;
         }
 
-        .set-add-btn, .set-del-btn {
+        .gen2 .set-add-btn, .gen2 .set-del-btn {
             color: #666;
             font-size: 170%;
         }
@@ -56,12 +56,12 @@
             clear: both;
         }
 
-        .state-btn {
+        .gen2 .state-btn {
             color: #666;
             font-size: 150%;
         }
 
-        .set-add-btn.disable, .state-btn.disable {
+        .gen2 .set-add-btn.disable, .gen2 .state-btn.disable {
             color: #eee;
         }
 
@@ -73,7 +73,7 @@
             display: flex;
             align-items: center;
             color: #aaa;
-            margin-bottom: 0.5em;
+            margin: 0.5em 0;
         }
 
         .set-label {
@@ -96,7 +96,7 @@
             min-width: 1em;
         }
 
-        .set-action-btn {
+        .gen2 .set-action-btn {
             flex: 0 0 auto;
             font-size: 150%;
             color: #666;
@@ -154,6 +154,9 @@
             white-space: nowrap;
             text-align: right;
             flex: 1 0 auto;
+        }
+
+        .gen2 .state-timer {
             font-size: 80%;
         }
 
@@ -192,19 +195,19 @@
     </style>
 </head>
 
-<body ng-app="setsApp" ng-controller="setsCtrl">
+<body ng-app="setsApp" ng-class="{gen2: gen2}" ng-controller="setsCtrl">
 
 <div class="set-add" ng-init="newSet={}">
     <div class="buttons">
         <button class="set-add-btn hy-nostyle" ng-click="doShowAddSetForm(true)" ng-if="!showAddSetForm">
-            <i aria-hidden="true" class="fas fa-fw fa-plus"></i>
+            <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-plus': true}"></i>
         </button>
         <button class="set-add-btn hy-nostyle" ng-class="{disable: !newSet.label}" ng-click="createSet(newSet)"
                 ng-disabled="!newSet.label" ng-if="showAddSetForm">
-            <i aria-hidden="true" class="fas fa-fw fa-check"></i>
+            <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-check': true}"></i>
         </button>
         <button class="set-add-btn hy-nostyle" ng-click="doShowAddSetForm(false)" ng-if="showAddSetForm">
-            <i aria-hidden="true" class="fas fa-fw fa-times"></i>
+            <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-times': true}"></i>
         </button>
     </div>
 
@@ -227,10 +230,10 @@
             <div class="set-label">{{ set.label }}</div>
             <div class="set-line"></div>
             <button class="set-action-btn hy-nostyle" ng-if="editSet!==set.id" ng-click="enableEditSet(set.id)">
-                <i aria-hidden="true" class="fas fa-fw fa-edit"></i>
+                <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-edit': true}"></i>
             </button>
             <button class="set-action-btn hy-nostyle" ng-if="editSet===set.id" ng-click="enableEditSet()">
-                <i aria-hidden="true" class="fas fa-fw fa-check"></i>
+                <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-check': true}"></i>
             </button>
         </div>
         <div class="set-states">
@@ -246,7 +249,7 @@
                     <div class="state-action" ng-if="editSet===set.id">
                         <button class="state-btn hy-nostyle" ng-class="{disable: !newState.label}"
                                 ng-click="createState(set.id, newState)" ng-disabled="!newState.label">
-                            <i aria-hidden="true" class="fas fa-plus"></i>
+                            <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-plus': true}"></i>
                         </button>
                     </div>
                 </li>
@@ -254,19 +257,20 @@
                     <div class="state state-{{ state.type }}" ng-click="toggleState(set.id, state.id)">
                         <div class="state-label"><div>{{ state.label }}</div></div>
                         <div class="state-timer" ng-if="state.timer">
-                            <i aria-hidden="true" class="fas fa-hourglass-half"></i> {{ state.timer }}
+                            <i aria-hidden="true" ng-class="{'fa fa-hourglass-o': gen1, 'fas fa-hourglass-half': gen2}"></i>
+                            {{ state.timer }}
                         </div>
                     </div>
                     <div class="state-action" ng-if="editSet===set.id">
                         <button class="state-btn hy-nostyle" ng-click="deleteState(set.id, state.id)">
-                            <i class="fas fa-trash-alt"></i>
+                            <i ng-class="{'fa fa-trash-o': gen1, 'fas fa-trash-alt': gen2}"></i>
                         </button>
                     </div>
                 </li>
             </ul>
             <div class="buttons" ng-if="editSet===set.id && !nStates">
                 <button class="set-del-btn hy-nostyle" ng-click="deleteSet(set)">
-                    <i aria-hidden="true" class="fas fa-trash-alt"></i>
+                    <i aria-hidden="true" ng-class="{'fa fa-trash-o': gen1, 'fas fa-trash-alt': gen2}"></i>
                 </button>
             </div>
         </div>
@@ -284,8 +288,12 @@
     sc._statesCache = {};
 
     sc.$on('ready', function (event, Homey_) {
+      var gen1 = (angular.version.major*10000 + angular.version.minor) < 10006;
+
       sc.Homey = Homey_;
       sc.__ = Homey_.__;
+      sc.gen1 = gen1;
+      sc.gen2 = !gen1;
 
       Homey_.on('sets_changed', handleSetsChanged);
       Homey_.on('states_changed', handleStatesChanged);
