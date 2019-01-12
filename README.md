@@ -35,6 +35,9 @@ The following conditions are available:
  
 ## Changelog
 
+v0.4.0:
+* New touch friendly settings page for Homey v2
+
 v0.3.3:
 * If 'Activate state delayed' action was executed on a state that had a timer running, 
 the timer would not be stopped.
