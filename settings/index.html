@@ -35,9 +35,13 @@
             padding: 5px 0;
         }
 
-        .set-add-btn {
+        .set-add-btn, .set-del-btn {
             color: #666;
             font-size: 170%;
+        }
+
+        .set-del-btn {
+            padding: 4px 0;
         }
 
         .buttons {
@@ -61,7 +65,7 @@
             color: #eee;
         }
 
-        .set-states {
+        .set, .set-states {
             clear: both;
         }
 
@@ -100,6 +104,7 @@
 
         .states {
             margin: 0;
+            clear: both;
         }
 
         .states li {
@@ -260,7 +265,7 @@
                 </li>
             </ul>
             <div class="buttons" ng-if="editSet===set.id && !nStates">
-                <button ng-click="deleteSet(set)">
+                <button class="set-del-btn hy-nostyle" ng-click="deleteSet(set)">
                     <i aria-hidden="true" class="fas fa-trash-alt"></i>
                 </button>
             </div>
