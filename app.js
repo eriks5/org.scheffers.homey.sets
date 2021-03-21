@@ -69,6 +69,57 @@ function updateToken(tokenName, tokenOptions, tokenValue){
   }
 }
 
+function updateAllTokens(setId) {
+  // Get a property of a set
+  let set = (getSettings('sets') || {})[setId];
+
+  // Update the FlowTokens (list active states)
+  var tokenName = flowTokenPrefix+flowTokenActive+setId;
+  var tokenOptions = {
+    type: 'string',
+    title: ''+set.label+labelPostfixActive
+  };
+  var tokenValue = listStates(setId, set.states, true);
+  updateToken(tokenName, tokenOptions, tokenValue);
+
+  // Update the FlowTokens (list inactive states)
+  tokenName = flowTokenPrefix+flowTokenInactive+setId;
+  tokenOptions = {
+    type: 'string',
+    title: ''+set.label+labelPostfixInactive
+  };
+  tokenValue = listStates(setId, set.states, false);
+  updateToken(tokenName, tokenOptions, tokenValue);
+
+  // Update the FlowTokens (count active states)
+  var tokenName = flowTokenPrefix+flowTokenActive+flowTokenCount+setId;
+  var tokenOptions = {
+    type: 'number',
+    title: ''+set.label+labelPostfixActive+labelCount
+  };
+  var tokenValue = countActive(set.states);
+  updateToken(tokenName, tokenOptions, tokenValue);
+
+  // Update the FlowTokens (count inactive states)
+  var tokenName = flowTokenPrefix+flowTokenInactive+flowTokenCount+setId;
+  var tokenOptions = {
+    type: 'number',
+    title: ''+set.label+labelPostfixInactive+labelCount
+  };
+  var tokenValue = getObjectSize(set.states) - countActive(set.states);
+  updateToken(tokenName, tokenOptions, tokenValue);
+
+  // Update the FlowTokens (total number of states)
+  var tokenName = flowTokenPrefix+flowTokenTotal+setId;
+  var tokenOptions = {
+    type: 'number',
+    title: ''+set.label+labelTotal
+  };
+  var tokenValue = getObjectSize(set.states);
+  updateToken(tokenName, tokenOptions, tokenValue);
+
+}
+
 function deleteToken(tokenName) {
   Homey.ManagerFlow.unregisterToken(setsAllTokens[tokenName])
     .then(() => {
@@ -88,7 +139,7 @@ function cleanupSetsAllTokens(setId){
   log('Token:', tokenName, 'removed from index');
   deleteToken(tokenName);
   log('Token:', tokenName, 'deleted');
-  
+
   tokenName = flowTokenPrefix+flowTokenInactive+setId;
   delete setsAllTokensIndex[tokenName];
   log('Token:', tokenName, 'removed from index');
@@ -139,6 +190,7 @@ function updateSettings(name, data){
   //noinspection JSUnresolvedFunction,JSUnresolvedVariable
   Homey.ManagerSettings.set(name, data);
   log(`Settings update: "${name}"`, name, data);
+  
 }
 
 // Utils
@@ -348,7 +400,7 @@ async function updateSeparator(setId, separatorText) {
     return false;
   }
 
-  log('updateSeparator set', setId, ' separatorText='+set.separator, ' new separatorText='+separatorText);
+  log('updateSeparator: set', setId, ' separatorText='+set.separator, ' new separatorText='+separatorText);
 
   // Update separator
   set.separator = separatorText;
@@ -356,28 +408,12 @@ async function updateSeparator(setId, separatorText) {
 
   log('=======================');
 
-  // Update the FlowTokens (list active states)
-  var tokenName = flowTokenPrefix+flowTokenActive+setId;
-  var tokenOptions = {
-    type: 'string',
-    title: ''+set.label+labelPostfixActive
-  };
-  var tokenValue = listStates(setId, set.states, true);
-  updateToken(tokenName, tokenOptions, tokenValue);
-
-  // Update the FlowTokens (list inactive states)
-  tokenName = flowTokenPrefix+flowTokenInactive+setId;
-  tokenOptions = {
-    type: 'string',
-    title: ''+set.label+labelPostfixInactive
-  };
-  tokenValue = listStates(setId, set.states, false);
-  updateToken(tokenName, tokenOptions, tokenValue);
-
-  log('=======================');
-
   updateSettings('sets', sets);
-  }
+
+  // Update the FlowTokens (list active states)
+  updateAllTokens(setId);
+
+}
 
   async function updateSet(setId, stateId, newState, del) {
     // Update set to new state.
@@ -432,51 +468,8 @@ async function updateSeparator(setId, separatorText) {
   
       updateSettings('sets', sets);
       await updateApi('sets_changed', {[setId]: getSetState(setId, set)});
-  
-      // Update the FlowTokens (list active states)
-      var tokenName = flowTokenPrefix+flowTokenActive+setId;
-      var tokenOptions = {
-        type: 'string',
-        title: ''+set.label+labelPostfixActive
-      };
-      var tokenValue = listStates(setId, set.states, true);
-      updateToken(tokenName, tokenOptions, tokenValue);
-  
-      // Update the FlowTokens (list inactive states)
-      tokenName = flowTokenPrefix+flowTokenInactive+setId;
-      tokenOptions = {
-        type: 'string',
-        title: ''+set.label+labelPostfixInactive
-      };
-      tokenValue = listStates(setId, set.states, false);
-      updateToken(tokenName, tokenOptions, tokenValue);
-  
-      // Update the FlowTokens (count active states)
-      var tokenName = flowTokenPrefix+flowTokenActive+flowTokenCount+setId;
-      var tokenOptions = {
-        type: 'number',
-        title: ''+set.label+labelPostfixActive+labelCount
-      };
-      var tokenValue = countActive(set.states);
-      updateToken(tokenName, tokenOptions, tokenValue);
 
-      // Update the FlowTokens (count inactive states)
-      var tokenName = flowTokenPrefix+flowTokenInactive+flowTokenCount+setId;
-      var tokenOptions = {
-        type: 'number',
-        title: ''+set.label+labelPostfixInactive+labelCount
-      };
-      var tokenValue = getObjectSize(set.states) - countActive(set.states);
-      updateToken(tokenName, tokenOptions, tokenValue);
-
-      // Update the FlowTokens (total number of states)
-      var tokenName = flowTokenPrefix+flowTokenInactive+flowTokenTotal+setId;
-      var tokenOptions = {
-        type: 'number',
-        title: ''+set.label+labelTotal
-      };
-      var tokenValue = getObjectSize(set.states);
-      updateToken(tokenName, tokenOptions, tokenValue);
+      updateAllTokens(setId);
 
       log('=======================');
 
@@ -770,19 +763,13 @@ class SetsApp extends Homey.App {
       log('=======================');
     }
 
-    // create the active/inactive tokens for each set
+    // create the FlowTokens for each set
     var sets = Homey.ManagerSettings.get('sets');
     if (sets){
       for (const setId of Object.getOwnPropertyNames(sets)){
         const set = (getSettings('sets') || {})[setId];
-        const states = set.states;
-        const stateId = Object.getOwnPropertyNames(set.states)[0]; // only one (the first) state per set is enough
-        const stateIdValue = (getSettings('states') || {})[stateId];
-        //log('stateIdValue:',stateIdValue)
-        if (states && states.hasOwnProperty(stateId)) {
-          // create tags/tokens by updating the set's state (as-is)        
-          updateSet(""+setId, ""+stateId, stateIdValue.use);
-          log('=======================');
+        if (set && set.hasOwnProperty('states')){
+          updateAllTokens(setId);
         }
       }
     }
@@ -822,55 +809,15 @@ class SetsApp extends Homey.App {
       log('set', setId, '=', sets[setId]);
       log('=======================');
 
-      // create the Tokens for this new set
-      var tokenName = flowTokenPrefix+flowTokenActive+setId;
-      var tokenOptions = {
-        type: 'string',
-        title: ''+set.label+labelPostfixActive
-      };
-      var tokenValue = listStates(setId, set.states, true);
-      updateToken(tokenName, tokenOptions, tokenValue);
-  
-      tokenName = flowTokenPrefix+flowTokenInactive+setId;
-      tokenOptions = {
-        type: 'string',
-        title: ''+set.label+labelPostfixInactive
-      };
-      tokenValue = listStates(setId, set.states, false);
-      updateToken(tokenName, tokenOptions, tokenValue);
-
-      // Update the FlowTokens (count active states)
-      var tokenName = flowTokenPrefix+flowTokenActive+flowTokenCount+setId;
-      var tokenOptions = {
-        type: 'number',
-        title: ''+set.label+labelPostfixActive+labelCount
-      };
-      var tokenValue = countActive(set.states);
-      updateToken(tokenName, tokenOptions, tokenValue);
-
-      // Update the FlowTokens (count inactive states)
-      var tokenName = flowTokenPrefix+flowTokenInactive+flowTokenCount+setId;
-      var tokenOptions = {
-        type: 'number',
-        title: ''+set.label+labelPostfixInactive+labelCount
-      };
-      var tokenValue = getObjectSize(set.states) - countActive(set.states);
-      updateToken(tokenName, tokenOptions, tokenValue);
-
-      // Update the FlowTokens (total number of states)
-      var tokenName = flowTokenPrefix+flowTokenTotal+setId;
-      var tokenOptions = {
-        type: 'number',
-        title: ''+set.label+labelTotal
-      };
-      var tokenValue = getObjectSize(set.states);
-      updateToken(tokenName, tokenOptions, tokenValue);
-      
-      log('=======================');
-
       updateSettings('sets', sets);
       updateSettings('setLabels', setLabels);
       await updateApi('sets_changed', {[setId]: getSetState(setId, set)});
+
+      // create the Tokens for this new set
+      updateAllTokens(setId);
+
+      log('=======================');
+
     }
 
     return setId;
@@ -889,10 +836,6 @@ class SetsApp extends Homey.App {
         log('Delete setId', setId, 'failed: not empty');
         return false;
       }
-      // unregister the list Active and list Inactive tokens
-      log('Cleaning all tokens in set:', setId);
-      cleanupSetsAllTokens(setId);
-
       delete sets[setId];
 
       updateSettings('sets', sets);
@@ -910,6 +853,11 @@ class SetsApp extends Homey.App {
       }
 
       await updateApi('sets_changed', {[setId]: null});
+
+      // unregister the list Active and list Inactive tokens
+      log('Cleaning all tokens in set:', setId);
+      cleanupSetsAllTokens(setId);
+
     }
 
     return true;
