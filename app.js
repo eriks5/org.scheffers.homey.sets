@@ -777,9 +777,11 @@ class SetsApp extends Homey.App {
         const set = (getSettings('sets') || {})[setId];
         const states = set.states;
         const stateId = Object.getOwnPropertyNames(set.states)[0]; // only one (the first) state per set is enough
+        const stateIdValue = (getSettings('states') || {})[stateId];
+        //log('stateIdValue:',stateIdValue)
         if (states && states.hasOwnProperty(stateId)) {
           // create tags/tokens by updating the set's state (as-is)        
-          updateSet(""+setId, ""+stateId, null);
+          updateSet(""+setId, ""+stateId, stateIdValue.use);
           log('=======================');
         }
       }
