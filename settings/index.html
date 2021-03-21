@@ -266,7 +266,7 @@
         <li class="separator" ng-if="editSet===set.id">
           <div class="separator separator-edit">
             <form novalidate>
-              <input id="setSeparator" ng-attr-placeholder="{{ set.separator }}"
+              <input ng-attr-placeholder="{{ set.separator }}"
                     ng-model="newSeparator.label" required type="text" ng-trim="false">
             </form>
           </div>
@@ -489,6 +489,8 @@
           return sc.error(err);
         }
       });
+      // reload the sets
+      readInitialState();
       newSeparator.label = '';
     };
 
@@ -499,8 +501,6 @@
         }
       });
       newState.label = '';
-      // reload the sets
-      
     };
 
     sc.deleteState = function (setId, stateId) {
