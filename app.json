@@ -1,6 +1,9 @@
 {
   "id": "org.scheffers.homey.sets",
+  "version": "0.4.1",
+  "compatibility": ">=1.5",
   "sdk": 2,
+  "brandColor": "#AB7925",
   "name": {
     "en": "Sets",
     "nl": "Verzamelingen"
@@ -9,22 +12,30 @@
     "en": "Sets",
     "nl": "Verzamelingen"
   },
-  "tags": {
-    "en": ["Set", "Sets", "State", "States", "Combine actions"],
-    "nl": ["Verzameling", "Verzamelingen", "Toestand", "Toestanden", "Combineer acties"]
+  "permissions": [],
+  "images": {
+    "large": "/assets/images/large.png",
+    "small": "/assets/images/small.png"
   },
-  "brandColor": "#AB7925",
-  "version": "0.4.0",
-  "compatibility": ">=1.5",
   "author": {
     "name": "Erik Scheffers",
     "email": "erik@scheffers.org"
   },
-  "images": {
-    "large": "./assets/images/large.png",
-    "small": "./assets/images/small.png"
+  "contributors": {
+    "developers": [
+      {
+        "name": "Michel van Spijk",
+        "email": "michel.vanspijk@gmail.com"
+      }
+    ]
   },
-  "category": "tools",
+  "category": [
+    "tools"
+  ],
+  "tags": {
+    "en": ["Set", "Sets", "State", "States", "Combine actions"],
+    "nl": ["Verzameling", "Verzamelingen", "Toestand", "Toestanden", "Combineer acties"]
+  },
   "flow": {
     "triggers": [
       {

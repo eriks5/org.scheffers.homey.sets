@@ -17,6 +17,10 @@
             outline: none;
         }
 
+        input {
+          font-size: 125% !important;
+        }
+
         .set-add {
             clear: both;
         }
@@ -56,16 +60,16 @@
             clear: both;
         }
 
-        .gen2 .state-btn {
+        .gen2 .state-btn, .gen2 .separator-btn {
             color: #666;
-            font-size: 150%;
+            font-size: 125%;
         }
 
-        .gen2 .set-add-btn.disable, .gen2 .state-btn.disable {
+        .gen2 .set-add-btn.disable, .gen2 .state-btn.disable, .gen2 .separator-btn.disable {
             color: #eee;
         }
 
-        .set, .set-states {
+        .set, .set-states, .set-separator {
             clear: both;
         }
 
@@ -98,7 +102,7 @@
 
         .gen2 .set-action-btn {
             flex: 0 0 auto;
-            font-size: 150%;
+            font-size: 125%;
             color: #666;
         }
 
@@ -107,7 +111,7 @@
             clear: both;
         }
 
-        .states li {
+        .states li, .separator li {
             list-style-type: none;
             padding-bottom: 1em;
             clear: both;
@@ -140,13 +144,32 @@
             align-items: center;
         }
 
+        .separator {
+            flex: 1 1 auto;
+            cursor: pointer;
+
+            color: black;
+
+            min-height: 4em;
+            margin-right: 0.2em;
+            padding: 0 1ex;
+
+            -webkit-border-radius: 8px;
+            -moz-border-radius: 8px;
+            border-radius: 8px;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
         .state-label {
             flex: 0 1 auto;
             min-width: 0;
         }
 
         .state-label > div {
-            font-size: 150%;
+            font-size: 125%;
         }
 
         .state-timer {
@@ -160,7 +183,7 @@
             font-size: 80%;
         }
 
-        .state-action {
+        .state-action, .separator-action {
             flex: 0 0 2em;
             text-align: right;
             margin-right: 0.2em;
@@ -182,7 +205,7 @@
             color: white;
         }
 
-        .state-new {
+        .state-new, .separator-edit {
             background-color: transparent;
             border: solid 1px black;
             padding: 0 1ex;
@@ -198,83 +221,109 @@
 <body ng-app="setsApp" ng-class="{gen2: gen2}" ng-controller="setsCtrl">
 
 <div class="set-add" ng-init="newSet={}">
-    <div class="buttons">
-        <button class="set-add-btn hy-nostyle" ng-click="doShowAddSetForm(true)" ng-if="!showAddSetForm">
-            <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-plus': true}"></i>
-        </button>
-        <button class="set-add-btn hy-nostyle" ng-class="{disable: !newSet.label}" ng-click="createSet(newSet)"
-                ng-disabled="!newSet.label" ng-if="showAddSetForm">
-            <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-check': true}"></i>
-        </button>
-        <button class="set-add-btn hy-nostyle" ng-click="doShowAddSetForm(false)" ng-if="showAddSetForm">
-            <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-times': true}"></i>
-        </button>
-    </div>
+  <div class="buttons">
+    <button class="set-add-btn hy-nostyle" ng-click="doShowAddSetForm(true)" ng-if="!showAddSetForm">
+      <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-plus': true}"></i>
+    </button>
+    <button class="set-add-btn hy-nostyle" ng-class="{disable: !newSet.label}" ng-click="createSet(newSet)"
+            ng-disabled="!newSet.label" ng-if="showAddSetForm">
+      <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-check': true}"></i>
+    </button>
+    <button class="set-add-btn hy-nostyle" ng-click="doShowAddSetForm(false)" ng-if="showAddSetForm">
+      <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-times': true}"></i>
+    </button>
+  </div>
 
-    <form class="set-add-form" novalidate ng-if="showAddSetForm">
-        <label for="addSetLabel">{{__("settings.add-set")}}</label>
-        <input id="addSetLabel" ng-attr-placeholder="{{__('settings.set-name')}}" ng-model="newSet.label"
-               required type="text">
-        <label for="copySetSelect">{{__("settings.copy-set")}}</label>
-        <select id="copySetSelect" ng-model="newSet.copyFrom">
-            <option value="">{{__("settings.copy-set-select")}}</option>
-            <option ng-repeat="set in sets | orderBy:'label'" ng-value="set.id">{{set.label}}</option>
-        </select>
-    </form>
+  <form class="set-add-form" novalidate ng-if="showAddSetForm">
+    <label for="addSetLabel">{{ __("settings.add-set") }}</label>
+    <input style="font-size: 125% !important" id="addSetLabel" ng-attr-placeholder="{{ __('settings.set-name') }}" ng-model="newSet.label"
+            required type="text">
+    <label for="copySetSelect">{{ __("settings.copy-set") }}</label>
+    <select id="copySetSelect" ng-model="newSet.copyFrom">
+      <option value="">{{ __("settings.copy-set-select") }}</option>
+      <option ng-repeat="set in sets | orderBy:'label'" ng-value="set.id">{{ set.label }}</option>
+    </select>
+  </form>
 </div>
 
 <ul class="sets">
-    <li ng-class="{set: true, editing: editSet===set.id}" ng-init="nStates=getStates(set).length"
-        ng-repeat="set in sets | orderBy:'label'">
-        <div class="set-header">
-            <div class="set-label">{{ set.label }}</div>
-            <div class="set-line"></div>
-            <button class="set-action-btn hy-nostyle" ng-if="editSet!==set.id" ng-click="enableEditSet(set.id)">
-                <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-edit': true}"></i>
+  <li ng-class="{set: true, editing: editSet===set.id}" ng-init="nStates=getStates(set).length"
+      ng-repeat="set in sets | orderBy:'label'">
+    <div class="set-header">
+      <div class="set-label">{{ set.label }}</div>
+        <div class="set-line"></div>
+        <button class="set-action-btn hy-nostyle" ng-if="editSet!==set.id" ng-click="enableEditSet(set.id)">
+            <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-edit': true}"></i>
+        </button>
+        <button class="set-action-btn hy-nostyle" ng-if="editSet===set.id" ng-click="enableEditSet()">
+            <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-check': true}"></i>
+        </button>
+    </div>
+
+    <div class="set-separator">
+      <ul class="separator" ng-if="editSet===set.id">
+        <span><div class="set-label">{{ __("settings.separator") }}</div></span>
+        <li class="separator" ng-if="editSet===set.id">
+          <div class="separator separator-edit">
+            <form novalidate>
+              <input id="setSeparator" ng-attr-placeholder="{{ set.separator }}"
+                    ng-model="newSeparator.label" required type="text" ng-trim="false">
+            </form>
+          </div>
+          <div id="separator-action" class="separator-action" ng-if="editSet===set.id">
+            <button class="separator-btn hy-nostyle" ng-class="{disable: !newSeparator.label}"
+                    ng-click="updateSeparator(set.id, newSeparator)" ng-disabled="!newSeparator.label">
+              <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-check': true}"></i>
             </button>
-            <button class="set-action-btn hy-nostyle" ng-if="editSet===set.id" ng-click="enableEditSet()">
-                <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-fw fa-check': true}"></i>
+          </div>
+        </li>
+      </ul>
+      <span ng-if="editSet===set.id">
+        <div class="set-label">{{ __("settings.separator-to-use") }}</div>
+        <div class="set-line"></div>
+        </br>
+      </span>
+    </div>
+
+    <div class="set-states">
+      <span ng-if="!nStates && editSet!==set.id">{{ __("settings.add-states-to-use") }}</span>
+      <ul class="states" ng-if="nStates || editSet===set.id">
+        <li ng-if="editSet===set.id">
+          <div class="state state-new">
+              <form novalidate>
+                  <input id="addStateLabel" ng-attr-placeholder="{{ __('settings.state-name') }}"
+                          ng-model="newState.label" required type="text">
+              </form>
+          </div>
+          <div class="state-action" ng-if="editSet===set.id">
+            <button class="state-btn hy-nostyle" ng-class="{disable: !newState.label}"
+                    ng-click="createState(set.id, newState)" ng-disabled="!newState.label">
+              <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-plus': true}"></i>
             </button>
-        </div>
-        <div class="set-states">
-            <span ng-if="!nStates && editSet!==set.id">{{__("settings.add-states-to-use")}}</span>
-            <ul class="states" ng-if="nStates || editSet===set.id">
-                <li ng-if="editSet===set.id">
-                    <div class="state state-new">
-                        <form novalidate>
-                            <input id="addStateLabel" ng-attr-placeholder="{{__('settings.state-name')}}"
-                                   ng-model="newState.label" required type="text">
-                        </form>
-                    </div>
-                    <div class="state-action" ng-if="editSet===set.id">
-                        <button class="state-btn hy-nostyle" ng-class="{disable: !newState.label}"
-                                ng-click="createState(set.id, newState)" ng-disabled="!newState.label">
-                            <i aria-hidden="true" ng-class="{fa: gen1, fas: gen2, 'fa-plus': true}"></i>
-                        </button>
-                    </div>
-                </li>
-                <li ng-repeat="state in getStates(set) | orderBy:'label'">
-                    <div class="state state-{{ state.type }}" ng-click="toggleState(set.id, state.id)">
-                        <div class="state-label"><div>{{ state.label }}</div></div>
-                        <div class="state-timer" ng-if="state.timer">
-                            <i aria-hidden="true" ng-class="{'fa fa-hourglass-o': gen1, 'fas fa-hourglass-half': gen2}"></i>
-                            {{ state.timer }}
-                        </div>
-                    </div>
-                    <div class="state-action" ng-if="editSet===set.id">
-                        <button class="state-btn hy-nostyle" ng-click="deleteState(set.id, state.id)">
-                            <i ng-class="{'fa fa-trash-o': gen1, 'fas fa-trash-alt': gen2}"></i>
-                        </button>
-                    </div>
-                </li>
-            </ul>
-            <div class="buttons" ng-if="editSet===set.id && !nStates">
-                <button class="set-del-btn hy-nostyle" ng-click="deleteSet(set)">
-                    <i aria-hidden="true" ng-class="{'fa fa-trash-o': gen1, 'fas fa-trash-alt': gen2}"></i>
+          </div>
+        </li>
+        <li ng-repeat="state in getStates(set) | orderBy:'label'">
+            <div class="state state-{{ state.type }}" ng-click="toggleState(set.id, state.id)">
+                <div class="state-label"><div>{{ state.label }}</div></div>
+                <div class="state-timer" ng-if="state.timer">
+                    <i aria-hidden="true" ng-class="{'fa fa-hourglass-o': gen1, 'fas fa-hourglass-half': gen2}"></i>
+                    {{ state.timer }}
+                </div>
+            </div>
+            <div class="state-action" ng-if="editSet===set.id">
+                <button class="state-btn hy-nostyle" ng-click="deleteState(set.id, state.id)">
+                    <i ng-class="{'fa fa-trash-o': gen1, 'fas fa-trash-alt': gen2}"></i>
                 </button>
             </div>
-        </div>
-    </li>
+        </li>
+      </ul>
+      <div class="buttons" ng-if="editSet===set.id && !nStates">
+        <button class="set-del-btn hy-nostyle" ng-click="deleteSet(set)">
+          <i aria-hidden="true" ng-class="{'fa fa-trash-o': gen1, 'fas fa-trash-alt': gen2}"></i>
+        </button>
+      </div>
+    </div>
+  </li>
 </ul>
 
 <script type="text/javascript">
@@ -434,6 +483,15 @@
       })
     };
 
+    sc.updateSeparator = function (setId, newSeparator) {
+      sc.Homey.api("POST", "/set/" + setId + "/separator", newSeparator, function (err) {
+        if (err) {
+          return sc.error(err);
+        }
+      });
+      newSeparator.label = '';
+    };
+
     sc.createState = function (setId, newState) {
       sc.Homey.api("POST", "/set/" + setId + "/state", newState, function (err) {
         if (err) {
@@ -441,6 +499,8 @@
         }
       });
       newState.label = '';
+      // reload the sets
+      
     };
 
     sc.deleteState = function (setId, stateId) {

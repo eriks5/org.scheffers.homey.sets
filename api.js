@@ -37,6 +37,15 @@ module.exports = [
     fn: callbackResult(args => Homey.app.deleteSet(args.params.set))
   },
   {
+    description: "Update set separator",
+    method: "POST",
+    path: "/set/:set/separator/",
+    role: "owner",
+    fn: callbackResult(async args => {
+      return args.body.label && await Homey.app.updateSeparator(args.params.set, args.body.label);
+    })
+  },
+  {
     description: "Add state to set",
     method: "POST",
     path: "/set/:set/state/",
