@@ -1,13 +1,19 @@
 {
   "settings": {
     "add-set": "Nieuwe verzameling",
-    "set-name": "naam",
+    "set-name": "Naam",
     "copy-set": "Kopieer toestanden van een andere verzameling (optioneel)",
     "copy-set-select": "Kies verzameling",
     "create-set": "Maak verzameling",
     "cancel": "Annuleer",
     "add-states-to-use": "Voeg toestanden aan de verzameling toe om deze te kunnen gebruiken.",
     "state-name": "naam",
-    "new-state": "Nieuwe toestand"
+    "new-state": "Nieuwe toestand",
+    "label-postfix-active": " actief",
+    "label-postfix-inactive": " inactief",
+    "label-count": " aantal",
+    "label-total": " totaal",
+    "separator": "Scheidingstekst",
+    "separator-to-use": "Stel een scheidingstekst in, te gebruiken in tags"
   }
 }

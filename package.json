@@ -1,11 +1,11 @@
 {
   "name": "org.scheffers.homey.sets",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Sets for Homey",
   "main": "app.js",
-  "dependencies": {},
   "devDependencies": {
-    "angular": "1.6.9"
+    "angular": "^1.8.2",
+    "homey": "^2.10.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

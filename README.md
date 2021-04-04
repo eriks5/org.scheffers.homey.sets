@@ -9,8 +9,7 @@ For example, this can be used to combine multiple motion sensors located in a si
 lights in that room when at least one of the motion sensors is triggered, and turn of the lights after no motion
 has been observed for a while.
 
-Using the settings page, sets and states are created. After that, these sets and states are available to be used
-in flows. 
+Using the settings page, sets and states are created. After that, these sets and states are available to be used in flows.
 
 The following flow actions are available:
  
@@ -32,8 +31,35 @@ The following conditions are available:
  * No states of a set are active, or 
  * All states of a set are active, or
  * A specific state of a set is active
- 
+
+For each set the following tags are available:
+
+ * Active states, the labels of all active states are combined in this tag.
+   For example, given a set named 'Movement' with three motion sensors labeled
+   - 'Motion 1',
+   - 'Motion 2' and
+   - 'Motion 3'.
+   When Motion 1 and Motion 3 are active, a tag labeled 'Movement Active' will contain 'Motion 1, Motion 3'.
+ * Inactive states, the labels of all inactive states are combined in this tag.
+   In the same example, a tag labeled 'Movement Inactive' will contain 'Motion 2'.
+   When a state changes from active to inactive or vice versa the label of the state will move to the other tag.
+   In the same example, if 'Motion 1' changes to inactive, the active tag will change to: 'Motion 3' and the inactive tag will change to 'Motion 1, Motion 2'.
+
+   Note that the default separator is ', ' (comma space) but can be changed per set in the settings page. Separator text can be empty, any character or multiple characters/text.
+ * Count tags for active and inactive states.
+   For example, in the 'Movement' set a 'Movement Active number' tag and 
+   a 'Movement Inactive number' tag will each hold the number of 
+   active/inactive states.
+ * Total tag. This holds the total number of states in the set.
+
+Using the tags makes your notifications on states easier. Use the directly or in combination with logic variables to enhance your notifications.
+The tags are updated each time a state in a set changes.
+
 ## Changelog
+
+v0.4.1:
+* Added tags for Active states and Inactive states per set
+* Added tags for count of Active, Inactive and Total states per set
 
 v0.4.0:
 * New touch friendly settings page for Homey v2

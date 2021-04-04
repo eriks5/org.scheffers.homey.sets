@@ -1,13 +1,19 @@
 {
-  "settings": {
-    "add-set": "New set",
-    "set-name": "set name",
-    "copy-set": "Copy states from another set (optional)",
-    "copy-set-select": "Select set",
-    "create-set": "Create set",
-    "cancel": "Cancel",
-    "add-states-to-use": "Add states to the set to use it.",
-    "state-name": "state name",
-    "new-state": "New state"
+    "settings": {
+      "add-set": "New set",
+      "set-name": "Set Name",
+      "copy-set": "Copy states from another set (optional)",
+      "copy-set-select": "Select set",
+      "create-set": "Create set",
+      "cancel": "Cancel",
+      "add-states-to-use": "Add states to the set to use it.",
+      "state-name": "state name",
+      "new-state": "New state",
+      "label-postfix-active": " Active",
+      "label-postfix-inactive": " Inactive",
+      "label-count": " number",
+      "label-total": " total",
+      "separator": "Separatortext",
+      "separator-to-use": "Set a separatortext to be used in tags"
+    }
   }
-}
